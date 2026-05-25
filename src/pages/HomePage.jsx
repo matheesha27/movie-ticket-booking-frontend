@@ -9,7 +9,7 @@ export default function HomePage() {
 
       <Header />
 
-      <main className="p-10">
+      <main className="p-28">
 
         <h1 className="text-4xl font-bold">
           Home Page

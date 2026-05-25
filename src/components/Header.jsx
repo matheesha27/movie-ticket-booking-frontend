@@ -4,15 +4,15 @@ export default function Header() {
 
   return (
 
-    <header className="w-full bg-primary text-white px-6 py-4">
+    <header className="fixed top-0 left-0 w-full bg-primary text-accent px-10 py-1">
 
       <div className="flex items-center justify-between">
 
-        <h1 className="text-2xl font-bold">
+        <h1 className="text-2xl font-bold text-accent">
           CineMax
         </h1>
 
-        <nav className="flex gap-6">
+        <nav className="flex gap-12">
 
           <Link to="/">Home</Link>
 
