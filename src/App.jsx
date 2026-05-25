@@ -12,15 +12,12 @@ function App() {
   return (
     <BrowserRouter>
       <Toaster position="top-right" />
-      <div className="w-full min-h-screen bg-primary">
+      <div className="w-full min-h-screen bg-secondary">
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/movie" element={<MoviePage />} />
-          <Route
-            path="/seat-selection"
-            element={<SeatSelectionPage />}
-          />
+          <Route path="/movie/:movieId" element={<MoviePage />} />
+          <Route path="/seat-selection/:seatId" element={<SeatSelectionPage />}/>
         </Routes>
       </div>
     </BrowserRouter>

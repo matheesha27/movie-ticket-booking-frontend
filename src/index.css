@@ -8,6 +8,10 @@
 }
 
 :root {
+  --color-primary: #121212;
+  --color-secondary: #f3ae0c;
+  --color-accent: #8A2BE2;
+  --color-text: #b6b4b4;
   --text: #6b6375;
   --text-h: #08060d;
   --bg: #fff;
