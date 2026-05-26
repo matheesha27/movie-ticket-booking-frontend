@@ -4,19 +4,19 @@ export default function Header() {
 
   return (
 
-    <header className="fixed top-0 left-0 w-full bg-primary text-accent px-10 py-1">
+    <header className="fixed top-0 left-0 w-full h-25 bg-primary px-10 py-1">
 
       <div className="flex items-center justify-between">
 
-        <h1 className="text-2xl font-bold text-accent">
+        <h1 className="text-2xl font-bold">
           CineMax
         </h1>
 
-        <nav className="flex gap-12">
+        <nav className="flex gap-12 text-white text-lg">
 
           <Link to="/">Home</Link>
 
-          <Link to="/movie/1">
+          <Link to="/movies">
             Movies
           </Link>
 

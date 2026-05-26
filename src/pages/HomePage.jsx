@@ -5,11 +5,11 @@ export default function HomePage() {
 
   return (
 
-    <div className="min-h-screen bg-secondary text-white">
+    <div className="min-h-screen text-white">
 
       <Header />
 
-      <main className="p-28">
+      <main className="p-28 bg-secondary">
 
         <h1 className="text-4xl font-bold">
           Home Page

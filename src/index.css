@@ -2,16 +2,16 @@
 
 @theme {
     --color-primary: #1f1f1f;
-    --color-secondary: #885f00;
-    --color-accent: #eca704;
-    --color-text: #b6b4b4;
+    --color-secondary: #eca704;
+    --color-accent: #b6b4b4;
+    --color-text: #ffffff;
 }
 
 :root {
   --color-primary: #1f1f1f;
-  --color-secondary: #885f00;
-  --color-accent: #eca704;
-  --color-text: #b6b4b4;
+  --color-secondary: #eca704;
+  --color-accent: #b6b4b4;
+  --color-text: #ffffff;
   --text: #6b6375;
   --text-h: #08060d;
   --bg: #fff;
