@@ -6,24 +6,34 @@ import Footer from '../components/Footer';
 import MovieCard from '../components/MovieCard';
 
 export default function MoviesPage() {
+
   const [movies, setMovies] = useState([]);
+  const [filteredMovies, setFilteredMovies] = useState([]);
   const [loading, setLoading] = useState(false);
 
   async function fetchAllMovies() {
+
     setLoading(true);
 
     try {
+
       const response = await axios.get(
         'http://localhost:8000/movies'
       );
+
       setMovies(response.data);
+      setFilteredMovies(response.data);
+
       console.log('Movies fetched successfully:', response.data);
 
     } catch (error) {
+
       console.error('Error fetching movies:', error);
 
     } finally {
+
       setLoading(false);
+
     }
   }
 
@@ -31,32 +41,66 @@ export default function MoviesPage() {
     fetchAllMovies();
   }, []);
 
+  // Search Handler
+  function handleSearch(value) {
+
+    const filtered = movies.filter((movie) =>
+      movie.title.toLowerCase().includes(value.toLowerCase())
+    );
+
+    setFilteredMovies(filtered);
+  }
+
   return (
+
     <div className="min-h-screen flex flex-col bg-secondary text-white">
-      
+
       <Header />
 
-      <main className="flex-1 p-28">
+      {/* Search Bar */}
+      <div className="sticky top-20 z-30 bg-secondary px-6 py-4">
         
+        <div className="max-w-xl mx-auto">
+          
+          <input
+            type="text"
+            placeholder="Search movies..."
+            onChange={(e) => handleSearch(e.target.value)}
+            className="w-full px-5 py-3 rounded-xl bg-primary border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500"
+          />
+
+        </div>
+
+      </div>
+
+      {/* Main Content */}
+      <main className="flex-1 px-10 pb-10 py-25">
+
         {loading ? (
-          <p className="text-center text-lg">
+
+          <p className="text-center text-lg mt-10">
             Loading movies...
           </p>
-        ) : movies.length > 0 ? (
-          
+
+        ) : filteredMovies.length > 0 ? (
+
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {movies.map((item) => (
+
+            {filteredMovies.map((item) => (
               <MovieCard
                 key={item.movieId}
                 movie={item}
               />
             ))}
+
           </div>
 
         ) : (
+
           <p className="text-center text-gray-400 text-lg mt-10">
             No movies found
           </p>
+
         )}
 
       </main>
