@@ -9,7 +9,7 @@ export default function HomePage() {
 
       <Header />
 
-      <main className="p-28 bg-secondary">
+      <main className="flex-1 p-28 bg-secondary">
 
         <h1 className="text-4xl font-bold">
           Home Page

@@ -4,9 +4,9 @@ export default function Header() {
 
   return (
 
-    <header className="fixed top-0 left-0 w-full h-25 bg-primary px-10 py-1">
+    <header className="fixed top-0 left-0 w-full h-25 bg-primary px-10 py-1 z-1">
 
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between h-full">
 
         <h1 className="text-2xl font-bold">
           CineMax
@@ -14,13 +14,15 @@ export default function Header() {
 
         <nav className="flex gap-12 text-white text-lg">
 
-          <Link to="/">Home</Link>
+          <Link to="/" className="hover:text-secondary">
+            Home
+          </Link>
 
-          <Link to="/movies">
+          <Link to="/movies" className="hover:text-secondary">
             Movies
           </Link>
 
-          <Link to="/login">
+          <Link to="/login" className="hover:text-secondary">
             Login
           </Link>
 
