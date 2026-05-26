@@ -4,7 +4,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 
 import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
-import MoviePage from './pages/MoviePage'
+import MovieOverviewPage from './pages/MovieOverviewPage'
 import MoviesPage from './pages/MoviesPage'
 import SeatSelectionPage from './pages/SeatSelectionPage'
 
@@ -18,7 +18,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/movies" element={<MoviesPage />} />
-          <Route path="/movie/:movieId" element={<MoviePage />} />
+          <Route path="/movies/:movieId" element={<MovieOverviewPage />} />
           <Route path="/seat-selection/:seatId" element={<SeatSelectionPage />}/>
         </Routes>
       </div>

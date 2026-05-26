@@ -14,26 +14,17 @@ export default function MoviesPage() {
   async function fetchAllMovies() {
 
     setLoading(true);
-
     try {
-
       const response = await axios.get(
         'http://localhost:8000/movies'
       );
-
       setMovies(response.data);
       setFilteredMovies(response.data);
-
       console.log('Movies fetched successfully:', response.data);
-
     } catch (error) {
-
       console.error('Error fetching movies:', error);
-
     } finally {
-
       setLoading(false);
-
     }
   }
 
