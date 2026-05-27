@@ -14,15 +14,26 @@ export default function MoviesPage() {
   async function fetchAllMovies() {
 
     setLoading(true);
+    
     try {
       const response = await axios.get(
         'http://localhost:8000/movies'
       );
-      setMovies(response.data);
-      setFilteredMovies(response.data);
-      console.log('Movies fetched successfully:', response.data);
+      // Get distinct movies by title
+      const uniqueMovies = response.data.filter(
+        (movie, index, self) =>
+          index === self.findIndex(
+            (m) => m.title === movie.title
+          )
+      );
+      setMovies(uniqueMovies);
+      setFilteredMovies(uniqueMovies);
+      console.log('All Movies fetched successfully:', response.data);
+      console.log('Unique Movies filtered successfully:', uniqueMovies);
+
     } catch (error) {
       console.error('Error fetching movies:', error);
+
     } finally {
       setLoading(false);
     }

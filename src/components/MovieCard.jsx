@@ -2,9 +2,6 @@ import { Link } from "react-router-dom";
 
 export default function MovieCard({ movie }) {
 
-    // const movie = props.movie;
-    console.log('MovieCard received movie:', movie.title);
-
   return (
     <Link to={"/movies/" + movie.id} state={{ movie }}>
 
@@ -18,15 +15,15 @@ export default function MovieCard({ movie }) {
             <div className="p-4 text-white">
                 
                 <h2 className="text-xl font-bold text-white">
-                {movie.title}
+                    {movie.title}
                 </h2>
 
                 <p className="text-gray-300 mt-2 text-sm line-clamp-2">
-                {movie.description}
+                    {movie.description}
                 </p>
 
                 <p className="text-gray-400 mt-3 text-sm">
-                Duration: {movie.duration} mins
+                    Duration: {movie.duration} mins
                 </p>
 
             </div>

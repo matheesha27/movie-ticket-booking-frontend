@@ -7,6 +7,7 @@ import LoginPage from './pages/LoginPage'
 import MovieOverviewPage from './pages/MovieOverviewPage'
 import MoviesPage from './pages/MoviesPage'
 import SeatSelectionPage from './pages/SeatSelectionPage'
+import MovieCinemasPage from './pages/MovieCinemasPage'
 
 function App() {
 
@@ -20,6 +21,7 @@ function App() {
           <Route path="/movies" element={<MoviesPage />} />
           <Route path="/movies/:movieId" element={<MovieOverviewPage />} />
           <Route path="/seat-selection/:seatId" element={<SeatSelectionPage />}/>
+          <Route path="/movies/cinemas/:movieId" element={<MovieCinemasPage />}/>
         </Routes>
       </div>
     </BrowserRouter>
