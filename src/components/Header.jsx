@@ -8,7 +8,7 @@ export default function Header() {
 
       <div className="flex items-center justify-between h-full">
 
-        <h1 className="text-2xl font-bold">
+        <h1 className="text-2xl font-bold text-white">
           CineMax
         </h1>
 

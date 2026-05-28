@@ -123,12 +123,13 @@ export default function MovieCinemasPage() {
                   <div
                     key={index}
                     onClick={() =>
-                      navigate('/movies/cinemas/' + movieFromState.id, {
+                      navigate('/seat-selection', {
                         state: {
-                          movie: movieFromState,
-                          cinema: cinema,
-                        },
-                      })
+                            movie: movieFromState,
+                            cinema: cinema,
+                            showTime: showTimes[cinema.id]
+                        }
+                        })
                     }
                     className="
                       cursor-pointer
