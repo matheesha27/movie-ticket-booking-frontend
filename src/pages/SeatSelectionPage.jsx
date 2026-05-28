@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Header from '../components/Header';
@@ -12,10 +12,12 @@ export default function SeatSelectionPage() {
     showTime
   } = location.state;
   const [seats, setSeats] = useState([]);
-  const [selectedSeats, setSelectedSeats] = useState(new Set());
+  const [selectedSeatsSet, setSelectedSeatsSet] = useState(new Set());
+  const [selectedSeatLabels, setSelectedSeatLabels] = useState([]);
   const [selectedDate, setSelectedDate] = useState("");
   const [sectionMap, setSectionMap] = useState({});
   const [totalPrice, setTotalPrice] = useState(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchSeats();
@@ -52,15 +54,24 @@ export default function SeatSelectionPage() {
     }
 
     // Toggle selection
-    const updated = new Set(selectedSeats);
+    const updated = new Set(selectedSeatsSet);
+    const seatLabel = `${seat.row}${seat.seat_number}`;
 
     if (updated.has(seat.id)) {
       updated.delete(seat.id);
+
+      setSelectedSeatLabels(prev =>
+        prev.filter(label => label !== seatLabel)
+      );
+
     } else {
       updated.add(seat.id);
+
+      setSelectedSeatLabels(prev => [...prev, seatLabel]);
     }
 
-    setSelectedSeats(updated);
+    setSelectedSeatsSet(updated);
+
     setTotalPrice((prevTotal) => prevTotal + (updated.has(seat.id) ? seat.price : -seat.price));
   }
 
@@ -70,7 +81,7 @@ function getSeatClass(seat) {
     return "bg-gray-700 cursor-not-allowed text-white";
   }
 
-  if (selectedSeats.has(seat.id)) {
+  if (selectedSeatsSet.has(seat.id)) {
     return "bg-green-500 text-white";
   }
 
@@ -129,7 +140,7 @@ function getSeatClass(seat) {
         />
       </div>
 
-      {/* PRICE */}
+      {/* SECTION PRICES */}
       <div className="flex justify-center">
         <div className="
           w-200
@@ -200,7 +211,6 @@ function getSeatClass(seat) {
                   ${getSeatClass(seat)}
                 `}
               >
-                {console.log('SELECTED SEAT' + seat.id)}
                 {seat.seat_number}
               </button>
             ))}
@@ -211,7 +221,7 @@ function getSeatClass(seat) {
       </div>
 
       {/* SELECTED SEATS */}
-      <div className="mt-10 text-center"> {/* All seats division */}
+      <div className="mt-10 text-center"> {/* Selected Seats division */}
 
         <h2 className="text-2xl font-bold mb-4 text-black">
           Selected Seats
@@ -219,7 +229,7 @@ function getSeatClass(seat) {
 
         <div className="flex gap-3 justify-center mt-5">
           {seats
-            .filter(seat => selectedSeats.has(seat.id))
+            .filter(seat => selectedSeatsSet.has(seat.id))
             .map((seat) => (
            <div
               key={seat.id}
@@ -236,10 +246,10 @@ function getSeatClass(seat) {
               {seat.seat_number}
             </div>
           ))}
-         {selectedSeats.size === 0 && (
+         {selectedSeatsSet.size === 0 && (
             <p className="text-black">No seats selected</p>
-          )}
-
+          )}          
+          {console.log('SELECTED SEAT LABELS:' + selectedSeatLabels)}
         </div>
 
       </div>
@@ -275,7 +285,7 @@ function getSeatClass(seat) {
       <div className="mt-10 text-center"> {/* Proceed button */}
 
         <button
-          disabled={selectedSeats.size === 0}
+          disabled={selectedSeatsSet.size === 0}
           className={`
             bg-blue-600
             hover:bg-blue-700
@@ -287,6 +297,22 @@ function getSeatClass(seat) {
             transition-colors
             duration-200
           `}
+          state={{
+            movie,
+            cinema,
+            selectedDate,
+            selectedSeatLabels,
+            totalPrice
+          }}
+          onClick={() => navigate("/booking", {
+            state: {
+              movie,
+              cinema,
+              selectedDate,
+              selectedSeatLabels,
+              totalPrice
+            }
+          })}
         >
           Proceed to Booking
         </button>
