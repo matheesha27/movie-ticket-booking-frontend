@@ -9,6 +9,7 @@ import MoviesPage from './pages/MoviesPage'
 import SeatSelectionPage from './pages/SeatSelectionPage'
 import MovieCinemasPage from './pages/MovieCinemasPage'
 import BookingPage from './pages/BookingPage'
+import AboutPage from './pages/AboutPage';
 
 function App() {
 
@@ -24,6 +25,7 @@ function App() {
           <Route path="/seat-selection" element={<SeatSelectionPage />}/>
           <Route path="/movies/cinemas/:movieId" element={<MovieCinemasPage />}/>
           <Route path="/booking" element={<BookingPage />}/>
+          <Route path="/about" element={<AboutPage />}/>
         </Routes>
       </div>
     </BrowserRouter>

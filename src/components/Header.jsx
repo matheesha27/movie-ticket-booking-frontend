@@ -26,6 +26,10 @@ export default function Header() {
             Login
           </Link>
 
+          <Link to="/about" className="hover:text-secondary">
+            About
+          </Link>
+
         </nav>
 
       </div>

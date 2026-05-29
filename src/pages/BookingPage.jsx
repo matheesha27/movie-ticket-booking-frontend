@@ -32,6 +32,7 @@ export default function BookingPage() {
 
   function calculateHandlingFee() {
 
+    {/* Calculate 10% handling fee */}
     const fee = totalPrice * 0.1;
     setHandlingFee(fee);
   }
@@ -66,8 +67,8 @@ export default function BookingPage() {
         {
           email,
           otp,
-          movie_id: movie.id,
-          cinema_id: cinema.id,
+          movie_title: movie.title,
+          cinema_name: cinema.name,
           selected_date: selectedDate,
           seats: selectedSeatLabels,
           total_price: totalPrice,
@@ -75,14 +76,16 @@ export default function BookingPage() {
           customer_mobile: mobile
         }
       );
-      setBookingReference(
-        response.data.booking_reference
-      );
-      toast.success("Booking Confirmed!");
+      if (response.data.success) {
+        setBookingReference(response.data.booking_reference);
+        toast.success("Booking confirmed!");
 
+      } else {
+        toast.error(response.data.message + ". Failed to confirm booking.");
+      }
     } catch (error) {
       console.error(error);
-      toast.error("Invalid OTP");
+      toast.error(error.response?.data?.message + ". Failed to confirm booking.");
     }
   }
     
@@ -153,7 +156,8 @@ export default function BookingPage() {
         {/* SEND OTP BUTTON */}
         <button
           onClick={sendOtp}
-          className="
+          disabled={loading}
+          className={`
             w-full
             bg-blue-600
             hover:bg-blue-700
@@ -163,9 +167,19 @@ export default function BookingPage() {
             rounded-lg
             transition-all
             duration-200
-          "
+
+            ${
+              loading
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-blue-600 hover:bg-blue-700"
+            }
+          `}
         >
-          Send OTP
+          {
+            loading
+              ? "Sending OTP..."
+              : "Send OTP"
+          }
         </button>
 
         {/* OTP SECTION */}
@@ -190,7 +204,6 @@ export default function BookingPage() {
                 focus:ring-green-500
               "
             />
-
             <button
               onClick={verifyOtpAndConfirmBooking}
               className="
@@ -235,6 +248,10 @@ export default function BookingPage() {
 
             <p className="text-2xl font-bold tracking-widest text-green-800 mt-2">
               {bookingReference}
+            </p>
+
+            <p className="mt-2 text-xs text-gray-600">
+              The Booking Confirmation is sent to your email. Please keep the reference number safe for any future correspondence.
             </p>
 
           </div>
