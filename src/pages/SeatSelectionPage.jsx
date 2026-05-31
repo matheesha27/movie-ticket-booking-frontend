@@ -20,10 +20,10 @@ export default function SeatSelectionPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-  if (selectedDate) {
-    fetchSeats();
-  }
-}, [selectedDate]);
+    if (selectedDate) {
+      fetchSeats();
+    }
+  }, [selectedDate]);
 
   async function fetchSeats() {
 
@@ -196,41 +196,61 @@ function getSeatClass(seat) {
 
       {/* SEATS */}
       {selectedDate && (
-        <div className="flex flex-col gap-2 items-center"> {/* All seats division */}
+        <div className="flex flex-col gap-8 items-center">
 
-          {groupSeatsByRow(seats).map(
-            
-            ([row, rowSeats]) => (
+          {Object.entries(sectionMap).map(([sectionName, sectionSeats]) => (
+
             <div
-              key={row}
-              className="flex gap-2 items-center"
+              key={sectionName}
+              className="w-full flex flex-col items-center"
             >
-              <span className="w-5 font-bold text-gray-600"> {/* Row Label */}
-                {row}
-              </span>
 
-              {rowSeats.map((seat) => (
-                <button
-                  key={seat.id}
-                  onClick={() =>
-                    handleSeatClick(seat)
-                  }
-                  className={`
-                    w-6
-                    h-6
-                    text-sm
-                    rounded
-                    border
-                    transition-all
-                    duration-200
-                    ${getSeatClass(seat)}
-                  `}
-                >
-                  {seat.seat_number}
-                </button>
-              ))}
+              {/* Section Label */}
+              <div className="mb-2">
+                <h3 className="text-md font-semibold text-gray-800">
+                  {sectionName}
+                </h3>
+              </div>
+
+              {/* Seats in Section */}
+              {groupSeatsByRow(sectionSeats).map(
+                ([row, rowSeats]) => (
+                  <div
+                    key={`${sectionName}-${row}`}
+                    className="flex gap-2 items-center mb-2"
+                  >
+                    <span className="w-5 font-bold text-gray-600">
+                      {row}
+                    </span>
+
+                    {rowSeats.map((seat) => (
+                      <button
+                        key={seat.id}
+                        onClick={() => handleSeatClick(seat)}
+                        className={`
+                          w-6
+                          h-6
+                          text-sm
+                          rounded
+                          border
+                          transition-all
+                          duration-200
+                          ${getSeatClass(seat)}
+                        `}
+                      >
+                        {seat.seat_number}
+                      </button>
+                    ))}
+                  </div>
+                )
+              )}
+
+              {/* Section Separator */}
+              <div className="w-full max-w-4xl mt-2 mb-0">
+                <hr className="border-gray-400" />
+              </div>
+
             </div>
-
           ))}
 
         </div>
