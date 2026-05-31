@@ -76,6 +76,7 @@ export default function BookingPage() {
           customer_mobile: mobile
         }
       );
+      console.log("OTP verification response:", response.data.selectedDate);
       if (response.data.success) {
         setBookingReference(response.data.booking_reference);
         toast.success("Booking confirmed!");
@@ -118,7 +119,7 @@ export default function BookingPage() {
         <input
           type="text"
           placeholder="Name"
-          className="border p-2 rounded mb-4 w-64 bg-white/80 text-black"
+          className="border p-2 rounded mb-4 w-64 bg-white text-black"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
@@ -130,7 +131,7 @@ export default function BookingPage() {
         <input
           type="text"
           placeholder="Email"
-          className="border p-2 rounded mb-4 w-64 bg-white/80 text-black"
+          className="border p-2 rounded mb-4 w-64 bg-white text-black"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
@@ -142,7 +143,7 @@ export default function BookingPage() {
         <input
           type="text"
           placeholder="Mobile Number"
-          className="border p-2 rounded mb-4 w-64 bg-white/80 text-black"
+          className="border p-2 rounded mb-4 w-64 bg-white text-black"
           value={mobile}
           onChange={(e) => setMobile(e.target.value)}
          />

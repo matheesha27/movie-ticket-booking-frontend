@@ -20,17 +20,27 @@ export default function SeatSelectionPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
+  if (selectedDate) {
     fetchSeats();
-  }, []);
+  }
+}, [selectedDate]);
 
   async function fetchSeats() {
 
     try {
       const response = await axios.get(
-        `http://localhost:8000/seats/movie/${movie.id}`
+        `http://localhost:8000/seats/unique-movie-seats`,
+        {
+          params: {
+            cinema_id: cinema.id,
+            movie_id: movie.id,
+            date: selectedDate,
+            show_time: showTime
+          }
+        }
       );
       setSeats(response.data);
-      // console.log('Seats fetched successfully:', response.data);
+      
       const sections = {};
       response.data.forEach((seat) => {
         if (!sections[seat.section]) {
@@ -39,12 +49,12 @@ export default function SeatSelectionPage() {
         sections[seat.section].push(seat);
       });
       setSectionMap(sections);
-      console.log('Section map:', sections);
 
     } catch (error) {
       console.error(error);
     }
   }
+
 
   function handleSeatClick(seat) {
 
@@ -55,25 +65,22 @@ export default function SeatSelectionPage() {
 
     // Toggle selection
     const updated = new Set(selectedSeatsSet);
-    const seatLabel = `${seat.row}${seat.seat_number}`;
+    const seatLabel = `${seat.row}${seat.seat_number}`; // unique
 
     if (updated.has(seat.id)) {
       updated.delete(seat.id);
-
       setSelectedSeatLabels(prev =>
         prev.filter(label => label !== seatLabel)
       );
 
     } else {
       updated.add(seat.id);
-
       setSelectedSeatLabels(prev => [...prev, seatLabel]);
     }
-
     setSelectedSeatsSet(updated);
-
     setTotalPrice((prevTotal) => prevTotal + (updated.has(seat.id) ? seat.price : -seat.price));
   }
+
 
 function getSeatClass(seat) {
 
@@ -88,6 +95,7 @@ function getSeatClass(seat) {
   return "bg-white text-black hover:bg-green-500";
   }
 
+
   function groupSeatsByRow(seats) {
 
     const grouped = {};
@@ -98,6 +106,13 @@ function getSeatClass(seat) {
       }
       grouped[seat.row].push(seat);
 
+    });
+
+    // sort each row by seat number
+    Object.keys(grouped).forEach((row) => {
+      grouped[row].sort((a, b) => {
+        return Number(a.seat_number) - Number(b.seat_number);
+      });
     });
 
     return Object.entries(grouped);
@@ -133,9 +148,7 @@ function getSeatClass(seat) {
         <input
           type="date"
           value={selectedDate}
-          onChange={(e) =>
-            setSelectedDate(e.target.value)
-          }
+          onChange={(e) => setSelectedDate(e.target.value)}
           className="border p-2 rounded bg-white"
         />
       </div>
@@ -175,50 +188,59 @@ function getSeatClass(seat) {
           py-3
           rounded-md
           font-bold
+          tracking-widest
         ">
           All eyes this way please!
         </div>
       </div>
 
       {/* SEATS */}
-      <div className="flex flex-col gap-2 items-center"> {/* All seats division */}
+      {selectedDate && (
+        <div className="flex flex-col gap-2 items-center"> {/* All seats division */}
 
-        {groupSeatsByRow(seats).map(
-          
-          ([row, rowSeats]) => (
-          <div
-            key={row}
-            className="flex gap-2 items-center"
-          >
-            <span className="w-5 font-bold text-gray-600"> {/* Row Label */}
-              {row}
-            </span>
+          {groupSeatsByRow(seats).map(
+            
+            ([row, rowSeats]) => (
+            <div
+              key={row}
+              className="flex gap-2 items-center"
+            >
+              <span className="w-5 font-bold text-gray-600"> {/* Row Label */}
+                {row}
+              </span>
 
-            {rowSeats.map((seat) => (
-              <button
-                key={seat.id}
-                onClick={() =>
-                  handleSeatClick(seat)
-                }
-                className={`
-                  w-6
-                  h-6
-                  text-sm
-                  rounded
-                  border
-                  transition-all
-                  duration-200
-                  ${getSeatClass(seat)}
-                `}
-              >
-                {seat.seat_number}
-              </button>
-            ))}
-          </div>
+              {rowSeats.map((seat) => (
+                <button
+                  key={seat.id}
+                  onClick={() =>
+                    handleSeatClick(seat)
+                  }
+                  className={`
+                    w-6
+                    h-6
+                    text-sm
+                    rounded
+                    border
+                    transition-all
+                    duration-200
+                    ${getSeatClass(seat)}
+                  `}
+                >
+                  {seat.seat_number}
+                </button>
+              ))}
+            </div>
 
-        ))}
+          ))}
 
-      </div>
+        </div>
+      )}
+      
+      {!selectedDate && (
+        <p className="text-center text-gray-600">
+          Please select a date to view available seats.
+        </p>
+      )}
 
       {/* SELECTED SEATS */}
       <div className="mt-10 text-center"> {/* Selected Seats division */}
@@ -247,7 +269,7 @@ function getSeatClass(seat) {
             </div>
           ))}
          {selectedSeatsSet.size === 0 && (
-            <p className="text-black">No seats selected</p>
+            <p className="text-gray-600">No seats selected</p>
           )}          
           {console.log('SELECTED SEAT LABELS:' + selectedSeatLabels)}
         </div>

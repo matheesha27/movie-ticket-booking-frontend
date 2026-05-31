@@ -99,7 +99,7 @@ export default function MoviesPage() {
 
         ) : (
 
-          <p className="text-center text-gray-400 text-lg mt-10">
+          <p className="text-center text-gray-600 text-lg mt-10">
             No movies found
           </p>
 

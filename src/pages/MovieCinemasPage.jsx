@@ -28,7 +28,7 @@ export default function MovieCinemasPage() {
         }
       );
       setCinemas(response.data);
-      console.log('Cinemas fetched successfully:', response.data);
+      // console.log('Cinemas fetched successfully:', response.data);
 
     } catch (error) {
       console.error('Error fetching cinemas:', error);
@@ -168,28 +168,6 @@ export default function MovieCinemasPage() {
 
               )}
 
-            </div>
-
-            <div className="mt-8">
-              <button onClick={() => navigate("/movies/cinemas/" + movieFromState.id)}
-                className="
-                  bg-red-600
-                  hover:bg-red-700
-                  text-white
-                  px-8
-                  py-4
-                  rounded-xl
-                  text-lg
-                  font-semibold
-                  shadow-xl
-                  transition-all
-                  duration-300
-                  hover:scale-105
-                  hover:shadow-red-500/30
-                "
-              >
-                🎟 Book Tickets
-              </button>
             </div>
 
           </div>
