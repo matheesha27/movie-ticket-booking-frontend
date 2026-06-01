@@ -11,6 +11,7 @@ export default function BookingPage() {
     movie,
     cinema,
     selectedDate,
+    showTime,
     selectedSeatLabels,
     totalPrice
   } = location.state;
@@ -102,6 +103,7 @@ export default function BookingPage() {
         <p className="text-md">Movie: {movie.title}</p>
         <p className="text-md">Cinema: {cinema.name}</p>
         <p className="text-md">Date: {selectedDate}</p>
+        <p className="text-md">Show Time: {showTime}</p>
         <p className="text-md">Seats: {selectedSeatLabels.join(", ")}</p>
         <br />
         <p className="text-md">Ticket(s) Price: LKR {totalPrice.toFixed(2)}</p>

@@ -2,6 +2,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Header from '../components/Header';
+import toast from "react-hot-toast";
 
 export default function SeatSelectionPage() {
 
@@ -82,18 +83,22 @@ export default function SeatSelectionPage() {
   }
 
 
-function getSeatClass(seat) {
+  function getSeatClass(seat) {
 
-  if (seat.status === "BOOKED") {
-    return "bg-gray-700 cursor-not-allowed text-white";
-  }
+    if (seat.status === "BOOKED") {
+      return "bg-gray-700 cursor-not-allowed text-white";
+    }
 
-  if (selectedSeatsSet.has(seat.id)) {
-    return "bg-green-500 text-white";
-  }
+    if (seat.status === "HELD") {
+      return "bg-blue-600 cursor-not-allowed text-white";
+    }
 
-  return "bg-white text-black hover:bg-green-500";
-  }
+    if (selectedSeatsSet.has(seat.id)) {
+      return "bg-green-500 text-white";
+    }
+
+    return "bg-white text-black hover:bg-green-500";
+    }
 
 
   function groupSeatsByRow(seats) {
@@ -117,6 +122,42 @@ function getSeatClass(seat) {
 
     return Object.entries(grouped);
     }
+
+
+  async function holdSelectedSeats() {
+    try {
+      console.log({
+        cinema_id: cinema.id,
+        movie_id: movie.id,
+        date: selectedDate,
+        show_time: showTime,
+        selected_seats: selectedSeatLabels
+      });
+      const response = await axios.post(
+        "http://localhost:8000/seats/hold",
+        {
+          cinema_id: cinema.id,
+          movie_id: movie.id,
+          date: selectedDate,
+          show_time: showTime,
+          selected_seats: selectedSeatLabels
+        }
+      );
+
+      return response.data.status === "SUCCESS";
+
+    } catch (error) {
+      console.error(error);
+
+      if (error.response?.data?.detail) {
+        toast.error(error.response.data.detail);
+      } else {
+        toast.error("Failed to hold seats");
+      }
+
+      return false;
+    }
+  }
 
   return (
 
@@ -288,7 +329,7 @@ function getSeatClass(seat) {
               {seat.seat_number}
             </div>
           ))}
-         {selectedSeatsSet.size === 0 && (
+          {selectedSeatsSet.size === 0 && (
             <p className="text-gray-600">No seats selected</p>
           )}          
           {console.log('SELECTED SEAT LABELS:' + selectedSeatLabels)}
@@ -303,6 +344,10 @@ function getSeatClass(seat) {
           <div className="flex items-center gap-2">
             <div className="w-6 h-6 bg-gray-700 rounded"></div>
             <span className="text-black">Booked</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-6 h-6 bg-blue-600 rounded"></div>
+            <span className="text-black">Held</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-6 h-6 bg-green-500 rounded"></div>
@@ -328,7 +373,7 @@ function getSeatClass(seat) {
 
         <button
           disabled={selectedSeatsSet.size === 0}
-          className={`
+          className="
             bg-blue-600
             hover:bg-blue-700
             text-white
@@ -338,23 +383,27 @@ function getSeatClass(seat) {
             rounded
             transition-colors
             duration-200
-          `}
-          state={{
-            movie,
-            cinema,
-            selectedDate,
-            selectedSeatLabels,
-            totalPrice
-          }}
-          onClick={() => navigate("/booking", {
-            state: {
-              movie,
-              cinema,
-              selectedDate,
-              selectedSeatLabels,
-              totalPrice
+          "
+          onClick={async () => {
+
+            const success = await holdSelectedSeats();
+
+            if (!success) {
+              return;
             }
-          })}
+
+            navigate("/booking", {
+              state: {
+                movie,
+                cinema,
+                selectedDate,
+                showTime,
+                selectedSeatLabels,
+                totalPrice
+              }
+            });
+
+          }}
         >
           Proceed to Booking
         </button>
