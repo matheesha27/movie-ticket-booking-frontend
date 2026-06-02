@@ -26,6 +26,8 @@ export default function SeatSelectionPage() {
     }
   }, [selectedDate]);
 
+  const [uniqueMovieSeatIdPrefix, setUniqueMovieSeatIdPrefix] = useState("");
+
   async function fetchSeats() {
 
     try {
@@ -40,6 +42,8 @@ export default function SeatSelectionPage() {
           }
         }
       );
+      setUniqueMovieSeatIdPrefix(response.data[0].unique_movie_seat_id.slice(0, -2)); // remove last 3 chars to get prefix
+      console.log(response.data[0].unique_movie_seat_id.slice(0, -2));
       setSeats(response.data);
       
       const sections = {};
@@ -62,6 +66,10 @@ export default function SeatSelectionPage() {
     // Already booked
     if (seat.status === "BOOKED") {
       return;
+    }
+
+    if (seat == null) {
+      toast.error("Please select seat(s) to proceed!")
     }
 
     // Toggle selection
@@ -386,24 +394,29 @@ export default function SeatSelectionPage() {
           "
           onClick={async () => {
 
-            const success = await holdSelectedSeats();
+          if (selectedSeatsSet.size === 0) {
+            toast.error("Please select seat(s) to proceed!");
+            return;
+          }
 
-            if (!success) {
-              return;
+          const success = await holdSelectedSeats();
+
+          if (!success) {
+            return;
+          }
+
+          navigate("/booking", {
+            state: {
+              movie,
+              cinema,
+              selectedDate,
+              showTime,
+              selectedSeatLabels,
+              totalPrice,
+              uniqueMovieSeatIdPrefix
             }
-
-            navigate("/booking", {
-              state: {
-                movie,
-                cinema,
-                selectedDate,
-                showTime,
-                selectedSeatLabels,
-                totalPrice
-              }
-            });
-
-          }}
+          });
+        }}
         >
           Proceed to Booking
         </button>

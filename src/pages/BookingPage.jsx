@@ -13,7 +13,8 @@ export default function BookingPage() {
     selectedDate,
     showTime,
     selectedSeatLabels,
-    totalPrice
+    totalPrice,
+    uniqueMovieSeatIdPrefix
   } = location.state;
   const [handlingFee, setHandlingFee] = useState(0);
 
@@ -26,6 +27,7 @@ export default function BookingPage() {
 
   const [bookingReference, setBookingReference] = useState("");
   const [loading, setLoading] = useState(false);
+  const [confirmingBooking, setConfirmingBooking] = useState(false);
 
   useEffect(() => {
     calculateHandlingFee();
@@ -41,6 +43,7 @@ export default function BookingPage() {
   async function sendOtp() {
 
     setLoading(true);
+
     try {
       await axios.post(
         'http://localhost:8000/bookings/send-otp',
@@ -62,22 +65,24 @@ export default function BookingPage() {
 
   async function verifyOtpAndConfirmBooking() {
 
+    setConfirmingBooking(true);
+
     try {
       const response = await axios.post(
         "http://localhost:8000/bookings/verify-otp",
         {
           email,
           otp,
-          movie_title: movie.title,
-          cinema_name: cinema.name,
+          cinema_id: cinema.id,
+          movie_id: movie.id,
           selected_date: selectedDate,
+          show_time: showTime,
           seats: selectedSeatLabels,
           total_price: totalPrice,
           customer_name: name,
           customer_mobile: mobile
         }
       );
-      console.log("OTP verification response:", response.data.selectedDate);
       if (response.data.success) {
         setBookingReference(response.data.booking_reference);
         toast.success("Booking confirmed!");
@@ -88,9 +93,12 @@ export default function BookingPage() {
     } catch (error) {
       console.error(error);
       toast.error(error.response?.data?.message + ". Failed to confirm booking.");
+
+    } finally {
+      setConfirmingBooking(false);
     }
-  }
     
+  }
 
   return (
 
@@ -159,7 +167,7 @@ export default function BookingPage() {
         {/* SEND OTP BUTTON */}
         <button
           onClick={sendOtp}
-          disabled={loading}
+          disabled={loading || confirmingBooking || bookingReference}
           className={`
             w-full
             bg-blue-600
@@ -209,20 +217,31 @@ export default function BookingPage() {
             />
             <button
               onClick={verifyOtpAndConfirmBooking}
-              className="
-                w-full
-                bg-green-600
-                hover:bg-green-700
-                text-white
-                font-semibold
-                py-3
-                rounded-lg
-                transition-all
-                duration-200
-              "
-            >
-              Verify OTP & Confirm Booking
-            </button>
+              disabled={loading || confirmingBooking || bookingReference}
+              className={`
+              w-full
+              bg-blue-600
+              hover:bg-blue-700
+              text-white
+              font-semibold
+              py-3
+              rounded-lg
+              transition-all
+              duration-200
+
+              ${
+                loading
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-green-600 hover:bg-green-700"
+              }
+            `}
+          >
+            {
+              confirmingBooking
+                ? "Confirming Booking..."
+                : "Verify OTP & Confirm Booking"
+            }
+          </button>
 
           </div>
         )}
@@ -254,7 +273,9 @@ export default function BookingPage() {
             </p>
 
             <p className="mt-2 text-xs text-gray-600">
-              The Booking Confirmation is sent to your email. Please keep the reference number safe for any future correspondence.
+              The Booking Confirmation is sent to your email.
+              You may produce the booking reference at the cinema for verification.
+              Please keep the reference number safe for any future correspondence.
             </p>
 
           </div>
