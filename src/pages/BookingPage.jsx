@@ -88,11 +88,11 @@ export default function BookingPage() {
         toast.success("Booking confirmed!");
 
       } else {
-        toast.error(response.data.message + ". Failed to confirm booking.");
+        toast.error(response.data.message + ". Booking failed.");
       }
     } catch (error) {
       console.error(error);
-      toast.error(error.response?.data?.message + ". Failed to confirm booking.");
+      toast.error(error.response?.data?.message + ". Booking failed.");
 
     } finally {
       setConfirmingBooking(false);
@@ -165,36 +165,38 @@ export default function BookingPage() {
       <div className="w-full max-w-md bg-white shadow-xl rounded-xl p-6 flex flex-col items-center gap-5">
 
         {/* SEND OTP BUTTON */}
-        <button
-          onClick={sendOtp}
-          disabled={loading || confirmingBooking || bookingReference}
-          className={`
-            w-full
-            bg-blue-600
-            hover:bg-blue-700
-            text-white
-            font-semibold
-            py-3
-            rounded-lg
-            transition-all
-            duration-200
+        {!otpSent && (
+          <button
+            onClick={sendOtp}
+            disabled={loading || confirmingBooking || bookingReference}
+            className={`
+              w-full
+              bg-blue-600
+              hover:bg-blue-700
+              text-white
+              font-semibold
+              py-3
+              rounded-lg
+              transition-all
+              duration-200
 
-            ${
+              ${
+                loading
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-blue-600 hover:bg-blue-700"
+              }
+            `}
+          >
+            {
               loading
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-blue-600 hover:bg-blue-700"
+                ? "Sending OTP..."
+                : "Send OTP"
             }
-          `}
-        >
-          {
-            loading
-              ? "Sending OTP..."
-              : "Send OTP"
-          }
-        </button>
+          </button>
+        )}
 
         {/* OTP SECTION */}
-        {otpSent && (
+        {otpSent && !bookingReference && (
 
           <div className="w-full flex flex-col items-center gap-4">
 
@@ -216,32 +218,32 @@ export default function BookingPage() {
               "
             />
             <button
-              onClick={verifyOtpAndConfirmBooking}
-              disabled={loading || confirmingBooking || bookingReference}
-              className={`
-              w-full
-              bg-blue-600
-              hover:bg-blue-700
-              text-white
-              font-semibold
-              py-3
-              rounded-lg
-              transition-all
-              duration-200
+                onClick={verifyOtpAndConfirmBooking}
+                disabled={loading || confirmingBooking || bookingReference}
+                className={`
+                w-full
+                bg-blue-600
+                hover:bg-blue-700
+                text-white
+                font-semibold
+                py-3
+                rounded-lg
+                transition-all
+                duration-200
 
-              ${
-                loading
-                  ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-green-600 hover:bg-green-700"
+                ${
+                  loading
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-green-600 hover:bg-green-700"
+                }
+              `}
+            >
+              {
+                confirmingBooking
+                  ? "Confirming Booking..."
+                  : "Verify OTP & Confirm Booking"
               }
-            `}
-          >
-            {
-              confirmingBooking
-                ? "Confirming Booking..."
-                : "Verify OTP & Confirm Booking"
-            }
-          </button>
+            </button>
 
           </div>
         )}
