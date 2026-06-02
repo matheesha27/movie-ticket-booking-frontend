@@ -136,6 +136,7 @@ export default function MovieOverviewPage() {
                   duration-300
                   hover:scale-105
                   hover:shadow-red-500/30
+                  cursor-pointer
                 "
               >
                 🎟 Book Tickets

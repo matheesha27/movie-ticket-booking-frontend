@@ -60,7 +60,7 @@ export default function MoviesPage() {
       <Header />
 
       {/* Search Bar */}
-      <div className="sticky top-20 z-30 bg-secondary px-6 py-4">
+      <div className="sticky top-25 z-30 bg-secondary px-6 py-4">
         
         <div className="max-w-xl mx-auto">
           
@@ -68,7 +68,7 @@ export default function MoviesPage() {
             type="text"
             placeholder="Search movies..."
             onChange={(e) => handleSearch(e.target.value)}
-            className="w-full px-5 py-3 rounded-xl bg-primary border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500"
+            className="w-full px-5 py-3 rounded-xl bg-primary border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
 
         </div>
@@ -76,7 +76,7 @@ export default function MoviesPage() {
       </div>
 
       {/* Main Content */}
-      <main className="flex-1 px-10 pb-10 py-25">
+      <main className="flex-1 px-10 pb-10 py-30">
 
         {loading ? (
 

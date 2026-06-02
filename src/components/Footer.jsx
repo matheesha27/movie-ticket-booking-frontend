@@ -10,7 +10,7 @@ export default function Footer() {
           <p>
             <span className="font-semibold text-white">
               Contact Us:
-            </span>{" "}
+            </span>
             <br />
             
             <a
@@ -30,7 +30,7 @@ export default function Footer() {
             </a>
           </p>
 
-          <p className="text-gray-500 text-xs pt-1">
+          <p className="text-gray-400 text-xs pt-1">
             Developed by{" "}
             <span className="text-gray-300">
               Matheesha Abeysekera
@@ -40,7 +40,7 @@ export default function Footer() {
         </div>
 
         {/* Right Section */}
-        <div className="text-sm text-gray-500 text-center md:text-right">
+        <div className="text-sm text-gray-400 text-center md:text-right">
           © 2026 CineMax (Pvt.) Ltd.
           <br />
           All rights reserved.
