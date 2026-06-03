@@ -1,6 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import axios from "axios";
+// import axios from "axios";
+import api from "../api/axios";
 import Header from '../components/Header';
 import toast from "react-hot-toast";
 
@@ -31,8 +32,8 @@ export default function SeatSelectionPage() {
   async function fetchSeats() {
 
     try {
-      const response = await axios.get(
-        `http://localhost:8000/seats/unique-movie-seats`,
+      const response = await api.get(
+        `/seats/unique-movie-seats`,
         {
           params: {
             cinema_id: cinema.id,
@@ -147,8 +148,8 @@ export default function SeatSelectionPage() {
         show_time: showTime,
         selected_seats: selectedSeatLabels
       });
-      const response = await axios.post(
-        "http://localhost:8000/seats/hold",
+      const response = await api.post(
+        "/seats/hold",
         {
           cinema_id: cinema.id,
           movie_id: movie.id,

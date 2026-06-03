@@ -1,7 +1,8 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+// import axios from 'axios';
+import api from "../api/axios";
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import MovieCard from '../components/MovieCard';
@@ -21,8 +22,8 @@ export default function MovieCinemasPage() {
 
     setLoading(true);
     try {
-      const response = await axios.post(
-        'http://localhost:8000/movies/cinemas/',
+      const response = await api.post(
+        '/movies/cinemas/',
         {
           movie_title: movieFromState.title
         }
@@ -42,8 +43,8 @@ export default function MovieCinemasPage() {
 
     setLoading(true);
     try {
-        const response = await axios.post(
-                'http://localhost:8000/movies/showtime',
+        const response = await api.post(
+                '/movies/showtime',
         {
             cinema_id: cinemaId,
             movie_title: movieTitle

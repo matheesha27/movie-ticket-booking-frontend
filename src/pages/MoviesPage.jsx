@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+// import axios from 'axios';
+import api from "../api/axios";
 
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -16,8 +17,8 @@ export default function MoviesPage() {
     setLoading(true);
     
     try {
-      const response = await axios.get(
-        'http://localhost:8000/movies'
+      const response = await api.get(
+        '/movies'
       );
       // Get distinct movies by title
       const uniqueMovies = response.data.filter(

@@ -1,6 +1,7 @@
 import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
-import axios from "axios";
+// import axios from "axios";
+import api from "../api/axios";
 import { toast } from "react-hot-toast";
 import Header from '../components/Header';
 
@@ -45,8 +46,8 @@ export default function BookingPage() {
     setLoading(true);
 
     try {
-      await axios.post(
-        'http://localhost:8000/bookings/send-otp',
+      await api.post(
+        '/bookings/send-otp',
         {
           email: email
         }
@@ -68,8 +69,8 @@ export default function BookingPage() {
     setConfirmingBooking(true);
 
     try {
-      const response = await axios.post(
-        "http://localhost:8000/bookings/verify-otp",
+      const response = await api.post(
+        "/bookings/verify-otp",
         {
           email,
           otp,
