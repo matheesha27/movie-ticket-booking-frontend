@@ -42,7 +42,13 @@ export default function SeatSelectionPage() {
           }
         }
       );
-      setUniqueMovieSeatIdPrefix(response.data[0].unique_movie_seat_id.slice(0, -2)); // remove last 3 chars to get prefix
+      console.log(response.data);
+      if (!response.data || response.data.length === 0) {
+        toast.error("No seats found for selected date and show time");
+        setSeats([]);
+        setSectionMap({});
+        return;
+      }
       console.log(response.data[0].unique_movie_seat_id.slice(0, -2));
       setSeats(response.data);
       
@@ -105,7 +111,7 @@ export default function SeatSelectionPage() {
       return "bg-green-500 text-white";
     }
 
-    return "bg-white text-black hover:bg-green-500";
+    return "bg-white text-black md:hover:bg-green-500";
     }
 
 
@@ -174,8 +180,8 @@ export default function SeatSelectionPage() {
       <Header />
 
       {/* HEADER */}
-      <div className="mb-8 text-black">
-        <h1 className="text-4xl font-bold text-text-gray-800">
+      <div className="mb-8 text-black px-4">
+        <h1 className="text-2xl md:text-4xl font-bold">
           {movie.title}
         </h1>
 
@@ -231,7 +237,8 @@ export default function SeatSelectionPage() {
       <div className="flex justify-center mb-12">
         <div className="
           bg-blue-200
-          w-200
+          w-full
+          max-w-5xl
           text-gray-600
           text-center
           py-3
@@ -245,62 +252,69 @@ export default function SeatSelectionPage() {
 
       {/* SEATS */}
       {selectedDate && (
-        <div className="flex flex-col gap-8 items-center">
+        <div className="w-full overflow-x-auto pb-4">
 
-          {Object.entries(sectionMap).map(([sectionName, sectionSeats]) => (
+          <div className="flex flex-col gap-8 items-center min-w-150 md:min-w-max">
 
-            <div
-              key={sectionName}
-              className="w-full flex flex-col items-center"
-            >
+            {Object.entries(sectionMap).map(([sectionName, sectionSeats]) => (
 
-              {/* Section Label */}
-              <div className="mb-2">
-                <h3 className="text-md font-semibold text-gray-800">
-                  {sectionName}
-                </h3>
+              <div
+                key={sectionName}
+                className="w-full flex flex-col items-center px-4"
+              >
+
+                {/* Section Label */}
+                <div className="mb-2">
+                  <h3 className="text-md font-semibold text-gray-800">
+                    {sectionName}
+                  </h3>
+                </div>
+
+                {/* Seats in Section */}
+                {groupSeatsByRow(sectionSeats).map(
+                  ([row, rowSeats]) => (
+                    <div
+                      key={`${sectionName}-${row}`}
+                      className="flex gap-1 md:gap-2 items-center mb-2 whitespace-nowrap"
+                    >
+                      <span className="w-6 font-bold text-gray-600 sticky left-0 bg-secondary pr-2">
+                        {row}
+                      </span>
+
+                      {rowSeats.map((seat) => (
+                        <button
+                          key={seat.id}
+                          onClick={() => handleSeatClick(seat)}
+                          className={`
+                            w-8
+                            h-8
+                            md:w-9
+                            md:h-9
+                            text-xs
+                            md:text-sm
+                            rounded
+                            border
+                            transition-all
+                            duration-200
+                            ${getSeatClass(seat)}
+                          `}
+                        >
+                          {seat.seat_number}
+                        </button>
+                      ))}
+                    </div>
+                  )
+                )}
+
+                {/* Section Separator */}
+                <div className="w-full max-w-4xl mt-2 mb-0">
+                  <hr className="border-gray-400" />
+                </div>
+
               </div>
+            ))}
 
-              {/* Seats in Section */}
-              {groupSeatsByRow(sectionSeats).map(
-                ([row, rowSeats]) => (
-                  <div
-                    key={`${sectionName}-${row}`}
-                    className="flex gap-2 items-center mb-2"
-                  >
-                    <span className="w-5 font-bold text-gray-600">
-                      {row}
-                    </span>
-
-                    {rowSeats.map((seat) => (
-                      <button
-                        key={seat.id}
-                        onClick={() => handleSeatClick(seat)}
-                        className={`
-                          w-6
-                          h-6
-                          text-sm
-                          rounded
-                          border
-                          transition-all
-                          duration-200
-                          ${getSeatClass(seat)}
-                        `}
-                      >
-                        {seat.seat_number}
-                      </button>
-                    ))}
-                  </div>
-                )
-              )}
-
-              {/* Section Separator */}
-              <div className="w-full max-w-4xl mt-2 mb-0">
-                <hr className="border-gray-400" />
-              </div>
-
-            </div>
-          ))}
+          </div>
 
         </div>
       )}
@@ -312,13 +326,24 @@ export default function SeatSelectionPage() {
       )}
 
       {/* SELECTED SEATS */}
-      <div className="mt-10 text-center"> {/* Selected Seats division */}
+      <div className="mt-10 text-center">
 
         <h2 className="text-2xl font-bold mb-4 text-black">
           Selected Seats
         </h2>
 
-        <div className="flex gap-3 justify-center mt-5">
+        <div
+          className="
+            flex
+            flex-wrap
+            max-h-32
+            overflow-y-auto
+            gap-2
+            justify-center
+            mt-5
+            px-4
+          "
+        >
           {seats
             .filter(seat => selectedSeatsSet.has(seat.id))
             .map((seat) => (
@@ -346,25 +371,38 @@ export default function SeatSelectionPage() {
       </div>
 
       {/* LEGENDS */}
-      <div className="mt-10 text-center"> {/* Legends division */}
+      <div
+        className="
+          flex
+          flex-wrap
+          gap-4
+          justify-center
+          px-4
+        "
+      >
 
         <div className="flex gap-3 justify-center">
+
           <div className="flex items-center gap-2">
             <div className="w-6 h-6 bg-gray-700 rounded"></div>
             <span className="text-black">Booked</span>
           </div>
+
           <div className="flex items-center gap-2">
             <div className="w-6 h-6 bg-blue-600 rounded"></div>
             <span className="text-black">Held</span>
           </div>
+
           <div className="flex items-center gap-2">
             <div className="w-6 h-6 bg-green-500 rounded"></div>
             <span className="text-black">Selected</span>
           </div>
+
           <div className="flex items-center gap-2">
             <div className="w-6 h-6 bg-white rounded border"></div>
             <span className="text-black">Available</span>
           </div>
+
         </div>
 
       </div>
@@ -377,7 +415,7 @@ export default function SeatSelectionPage() {
       </div>
 
       {/* PROCEED */}
-      <div className="mt-10 text-center"> {/* Proceed button */}
+      <div className="mt-10 text-center md:static sticky bottom-0 bg-secondary py-4">
 
         <button
           disabled={selectedSeatsSet.size === 0}

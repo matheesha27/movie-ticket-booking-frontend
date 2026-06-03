@@ -163,9 +163,7 @@ export default function MovieCinemasPage() {
                 ))
 
               ) : (
-
                 <p className="text-black">No cinemas available.</p>
-
               )}
 
             </div>
