@@ -378,6 +378,7 @@ export default function SeatSelectionPage() {
           gap-4
           justify-center
           px-4
+          mt-8
         "
       >
 
