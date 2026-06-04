@@ -18,7 +18,7 @@ export default function MoviesPage() {
     
     try {
       const response = await api.get(
-        '/movies'
+        '/movies/'
       );
       // Get distinct movies by title
       const uniqueMovies = response.data.filter(
