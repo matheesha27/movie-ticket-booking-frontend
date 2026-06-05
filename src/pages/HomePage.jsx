@@ -17,7 +17,7 @@ export default function HomePage() {
 
     try {
       const response = await api.get(
-        '/movies/banners'
+        '/movies/banners/urls'
       );
       setMovieBanners(response.data);
       console.log("Movie banners fetched successfully:", response.data);
