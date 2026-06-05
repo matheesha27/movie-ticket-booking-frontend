@@ -2,10 +2,30 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from 'react';
 
 export default function HomePage() {
 
   const navigate = useNavigate();
+  const [movieBanners, setMovieBanners] = useState([]);
+
+  useEffect(() => {
+    fetchMovieBanners();
+  }, []);
+
+  async function fetchMovieBanners() {
+
+    try {
+      const response = await api.get(
+        '/movies/banners'
+      );
+      setMovieBanners(response.data);
+      console.log("Movie banners fetched successfully:", response.data);
+
+    } catch (error) {
+      console.error("Error fetching movie banners:", error);
+    }
+  }
 
   return (
     <div className="min-h-screen bg-secondary text-white overflow-hidden">
@@ -182,7 +202,7 @@ export default function HomePage() {
       <section className="py-10 overflow-hidden">
 
         <h2 className="text-4xl font-bold text-center text-primary mb-10">
-          Now Showing
+          Now Showing...
         </h2>
 
         <motion.div
@@ -196,29 +216,40 @@ export default function HomePage() {
           }}
           className="flex gap-6 w-max mt-6"
         >
-          {[
-            "/posters/movie1.jpg",
-            "/posters/movie2.jpg",
-            "/posters/movie3.jpg",
-            "/posters/movie4.jpg",
-            "/posters/movie5.jpg",
-            "/posters/movie1.jpg",
-            "/posters/movie2.jpg",
-            "/posters/movie3.jpg"
-          ].map((poster, index) => (
+          {[...movieBanners, ...movieBanners].map((movie, index) => (
 
-            <img
-              key={index}
-              src={poster}
-              alt=""
-              className="
-                w-56
-                h-80
-                object-cover
-                rounded-xl
-                shadow-xl
-              "
-            />
+            <div
+              key={`${movie.id}-${index}`}
+              className="relative"
+            >
+              <img
+                src={movie.banner_image}
+                alt={movie.title}
+                className="
+                  w-56
+                  h-80
+                  object-cover
+                  rounded-xl
+                  shadow-xl
+                "
+              />
+
+              <div
+                className="
+                  absolute
+                  bottom-0
+                  left-0
+                  right-0
+                  bg-black/70
+                  text-white
+                  text-center
+                  py-2
+                  rounded-b-xl
+                "
+              >
+                {movie.title}
+              </div>
+            </div>
 
           ))}
         </motion.div>
