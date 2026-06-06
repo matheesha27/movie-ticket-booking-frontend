@@ -38,6 +38,7 @@ export default function SeatSelectionPage() {
           params: {
             cinema_id: cinema.id,
             movie_id: movie.id,
+            movie_title: movie.title,
             date: selectedDate,
             show_time: showTime
           }
