@@ -9,7 +9,7 @@ export default function SeatSelectionPage() {
 
   const location = useLocation();
   const {
-    movie,
+    // movie,
     cinema,
     showTime
   } = location.state;
@@ -19,15 +19,39 @@ export default function SeatSelectionPage() {
   const [selectedDate, setSelectedDate] = useState("");
   const [sectionMap, setSectionMap] = useState({});
   const [totalPrice, setTotalPrice] = useState(0);
+
+  const [movie, setMovie] = useState(null);
+
   const navigate = useNavigate();
 
   useEffect(() => {
     if (selectedDate) {
+      getExactMovieRow();
       fetchSeats();
     }
   }, [selectedDate]);
 
   const [uniqueMovieSeatIdPrefix, setUniqueMovieSeatIdPrefix] = useState("");
+
+  async function getExactMovieRow() {
+
+    try {
+      const response = await api.get("/movies/movie", {
+        params: {
+          cinema_id: cinema.id,
+          show_time: showTime,
+        },
+      });
+      setMovie(response.data);
+      console.log("Exact movie fetched successfully:", response.data);
+      // setUniqueMovieSeatIdPrefix(`${response.data.id}_${cinema.id}_${showTime.replace(":", "-")}`); ADDED BY SUGGESSION
+      return response.data;
+
+    } catch (error) {
+      console.error("Error fetching movie:", error);
+      return null;
+    }
+  }
 
   async function fetchSeats() {
 
@@ -37,8 +61,8 @@ export default function SeatSelectionPage() {
         {
           params: {
             cinema_id: cinema.id,
-            movie_id: movie.id,
-            movie_title: movie.title,
+            movie_id: movie.id, // change
+            movie_title: movie.title, // change
             date: selectedDate,
             show_time: showTime
           }
@@ -51,7 +75,7 @@ export default function SeatSelectionPage() {
         setSectionMap({});
         return;
       }
-      console.log(response.data[0].unique_movie_seat_id.slice(0, -2));
+      // console.log(response.data[0].unique_movie_seat_id.slice(0, -2));
       setSeats(response.data);
       
       const sections = {};
