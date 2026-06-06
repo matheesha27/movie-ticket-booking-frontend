@@ -126,7 +126,7 @@ export default function MovieCinemasPage() {
                     onClick={() =>
                       navigate('/seat-selection', {
                         state: {
-                            movie: movieFromState,
+                            // movie: movieFromState,
                             cinema: cinema,
                             showTime: showTimes[cinema.id]
                         }
