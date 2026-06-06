@@ -26,8 +26,7 @@ export default function SeatSelectionPage() {
 
   useEffect(() => {
     if (selectedDate) {
-      getExactMovieRow();
-      fetchSeats();
+      loadData();
     }
   }, [selectedDate]);
 
@@ -89,6 +88,16 @@ export default function SeatSelectionPage() {
 
     } catch (error) {
       console.error(error);
+    }
+  }
+
+
+  async function loadData() {
+
+    const movieData = await getExactMovieRow();
+
+    if (movieData) {
+      fetchSeats(movieData);
     }
   }
 
