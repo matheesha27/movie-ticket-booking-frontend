@@ -18,6 +18,18 @@ export default function MovieCinemasPage() {
 
   console.log("Movie Cinemas Page - Movie from state:", movieFromState);
 
+  useEffect(() => {
+    fetchMovieCinemas();
+  }, []);
+
+  useEffect(() => {
+    if (cinemas.length > 0) {
+        cinemas.forEach((cinema) => {
+          getShowTime(cinema.id, movieFromState.title);
+        });
+    }
+  }, [cinemas]);
+
   async function fetchMovieCinemas() {
 
     setLoading(true);
@@ -64,17 +76,29 @@ export default function MovieCinemasPage() {
     }
   }
 
-  useEffect(() => {
-    fetchMovieCinemas();
-  }, []);
+  async function handleCinemaClick(cinema) {
 
-  useEffect(() => {
-    if (cinemas.length > 0) {
-        cinemas.forEach((cinema) => {
-        getShowTime(cinema.id, movieFromState.title);
-        });
-    }
-  }, [cinemas]);
+    const response = await api.get(
+      "/movies/movie-by-cinema",
+      {
+        params: {
+          cinema_id: cinema.id,
+          movie_title: movieFromState.title,
+          show_time: showTimes[cinema.id]
+        }
+      }
+    );
+
+    const exactMovie = response.data;
+
+    navigate("/seat-selection", {
+      state: {
+        movie: exactMovie,
+        cinema: cinema,
+        showTime: exactMovie.show_time
+      }
+    });
+  }
 
   return (
 
@@ -123,15 +147,7 @@ export default function MovieCinemasPage() {
 
                   <div
                     key={index}
-                    onClick={() =>
-                      navigate('/seat-selection', {
-                        state: {
-                            // movie: movieFromState,
-                            cinema: cinema,
-                            showTime: showTimes[cinema.id]
-                        }
-                        })
-                    }
+                    onClick={() => handleCinemaClick(cinema)}
                     className="
                       cursor-pointer
                       bg-white
