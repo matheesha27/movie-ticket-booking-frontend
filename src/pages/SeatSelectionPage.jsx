@@ -8,99 +8,121 @@ import toast from "react-hot-toast";
 export default function SeatSelectionPage() {
 
   const location = useLocation();
-  const {
-    // movie,
-    cinema,
-    showTime
-  } = location.state;
+  // const {
+  //   movie,
+  //   cinema,
+  //   showTime
+  // } = location.state;
+  const movie = location.state?.movie;
+  const cinema = location.state?.cinema;
+  const showTime = location.state?.showTime;
   const [seats, setSeats] = useState([]);
   const [selectedSeatsSet, setSelectedSeatsSet] = useState(new Set());
   const [selectedSeatLabels, setSelectedSeatLabels] = useState([]);
   const [selectedDate, setSelectedDate] = useState("");
   const [sectionMap, setSectionMap] = useState({});
   const [totalPrice, setTotalPrice] = useState(0);
-
-  const [movie, setMovie] = useState(null);
+  const [uniqueMovieSeatIdPrefix, setUniqueMovieSeatIdPrefix] = useState("");
 
   const navigate = useNavigate();
 
   useEffect(() => {
     if (selectedDate) {
-      loadData();
+      fetchSeats();
     }
   }, [selectedDate]);
 
-  const [uniqueMovieSeatIdPrefix, setUniqueMovieSeatIdPrefix] = useState("");
+  // async function fetchSeats() {
 
-  async function getExactMovieRow() {
+  //   try {
+  //     const response = await api.get(
+  //       `/seats/unique-movie-seats`,
+  //       {
+  //         params: {
+  //           cinema_id: cinema.id,
+  //           movie_id: movie.id, // change
+  //           movie_title: movie.title, // change
+  //           date: selectedDate,
+  //           show_time: showTime
+  //         }
+  //       }
+  //     );
+  //     console.log(response.data);
+  //     if (!response.data || response.data.length === 0) {
+  //       toast.error("No seats found for selected date and show time");
+  //       setSeats([]);
+  //       setSectionMap({});
+  //       return;
+  //     }
+  //     // console.log(response.data[0].unique_movie_seat_id.slice(0, -2));
+  //     setSeats(response.data);
+      
+  //     const sections = {};
+  //     response.data.forEach((seat) => {
+  //       if (!sections[seat.section]) {
+  //         sections[seat.section] = [];
+  //       }
+  //       sections[seat.section].push(seat);
+  //     });
+  //     setSectionMap(sections);
 
-    try {
-      const response = await api.get("/movies/movie", {
-        params: {
-          cinema_id: cinema.id,
-          show_time: showTime,
-        },
-      });
-      setMovie(response.data);
-      console.log("Exact movie fetched successfully:", response.data);
-      // setUniqueMovieSeatIdPrefix(`${response.data.id}_${cinema.id}_${showTime.replace(":", "-")}`); ADDED BY SUGGESSION
-      return response.data;
-
-    } catch (error) {
-      console.error("Error fetching movie:", error);
-      return null;
-    }
-  }
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // }
 
   async function fetchSeats() {
-
     try {
+
+      console.log({
+        cinema_id: cinema.id,
+        movie_id: movie.id,
+        show_time: showTime,
+        date: selectedDate
+      });
+
       const response = await api.get(
-        `/seats/unique-movie-seats`,
+        "/seats/unique-movie-seats",
         {
           params: {
             cinema_id: cinema.id,
-            movie_id: movie.id, // change
-            movie_title: movie.title, // change
-            date: selectedDate,
-            show_time: showTime
+            movie_id: movie.id,
+            show_time: showTime,
+            date: selectedDate
           }
         }
       );
-      console.log(response.data);
+
       if (!response.data || response.data.length === 0) {
-        toast.error("No seats found for selected date and show time");
+        toast.error("No seats found");
         setSeats([]);
         setSectionMap({});
         return;
       }
-      // console.log(response.data[0].unique_movie_seat_id.slice(0, -2));
-      setSeats(response.data);
+
+      console.log(movie.id);
+      console.log(movie.title);
+      console.log(cinema.id);
+      console.log(showTime);
       
+      setSeats(response.data);
+
       const sections = {};
+
       response.data.forEach((seat) => {
         if (!sections[seat.section]) {
           sections[seat.section] = [];
         }
+
         sections[seat.section].push(seat);
       });
+
       setSectionMap(sections);
 
     } catch (error) {
       console.error(error);
     }
   }
-
-
-  async function loadData() {
-
-    const movieData = await getExactMovieRow();
-
-    if (movieData) {
-      fetchSeats(movieData);
-    }
-  }
-
 
   function handleSeatClick(seat) {
 
