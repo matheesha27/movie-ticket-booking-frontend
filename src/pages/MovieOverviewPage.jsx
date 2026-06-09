@@ -4,6 +4,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import MovieCard from '../components/MovieCard';
+import ReactPlayer from "react-player";
+
 
 export default function MovieOverviewPage() {
 
@@ -34,12 +36,19 @@ export default function MovieOverviewPage() {
 
             <div className="rounded-lg overflow-hidden shadow-2xl bg-black">
 
-              <iframe
+              {/* <iframe
                 className="w-full h-125"
                 src={getYoutubeEmbedUrl(movieFromState.trailerUrl)}
                 title="Movie Trailer"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
+              /> */}
+              
+              <ReactPlayer
+                url={movieFromState.trailer}
+                controls
+                width="100%"
+                height="500px"
               />
 
             </div>
