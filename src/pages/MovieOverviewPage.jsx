@@ -13,6 +13,11 @@ export default function MovieOverviewPage() {
   const [loading, setLoading] = useState(false);
   const [movie, setMovie] = useState(null);
 
+  const getYoutubeEmbedUrl = (url) => {
+    const videoId = url.split("v=")[1];
+    return `https://www.youtube.com/embed/${videoId}`;
+  };
+
   return (
 
     <div className="min-h-screen flex flex-col bg-secondary text-white">
@@ -28,16 +33,14 @@ export default function MovieOverviewPage() {
           <div className="w-full">
 
             <div className="rounded-lg overflow-hidden shadow-2xl bg-black">
-              
-              <video
-                controls
-                className="w-full h-125 object-cover"
-              >
-                <source
-                  src={movieFromState.trailer}
-                  type="video/mp4"
-                />
-              </video>
+
+              <iframe
+                className="w-full h-125"
+                src={getYoutubeEmbedUrl(movieFromState.trailerUrl)}
+                title="Movie Trailer"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
 
             </div>
 
