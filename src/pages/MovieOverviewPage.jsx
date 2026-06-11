@@ -1,10 +1,10 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import ReactPlayer from "react-player";
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import MovieCard from '../components/MovieCard';
-import ReactPlayer from "react-player";
 
 
 export default function MovieOverviewPage() {
@@ -43,7 +43,7 @@ export default function MovieOverviewPage() {
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
               /> */}
-              
+
               <ReactPlayer
                 url={movieFromState.trailer}
                 controls
